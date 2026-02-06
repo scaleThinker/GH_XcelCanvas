@@ -1,0 +1,16 @@
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\GH_XcelCanvas.csproj.AssemblyReference.cache
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\Interop.Microsoft.Office.Interop.Excel.dll
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\GH_XcelCanvas.csproj.ResolveComReference.cache
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\GH_XcelCanvas.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\GH_XcelCanvas.AssemblyInfoInputs.cache
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\GH_XcelCanvas.AssemblyInfo.cs
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\GH_XcelCanvas.csproj.CoreCompileInputs.cache
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\bin\Debug\net7.0-windows\GH_XcelCanvas.deps.json
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\bin\Debug\net7.0-windows\GH_XcelCanvas.runtimeconfig.json
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\bin\Debug\net7.0-windows\GH_XcelCanvas.gha
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\bin\Debug\net7.0-windows\GH_XcelCanvas.pdb
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\GH_XcelCanvas.gha
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\refint\GH_XcelCanvas.gha
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\GH_XcelCanvas.pdb
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\GH_XcelCanvas.genruntimeconfig.cache
+C:\Users\arqio\Downloads\Nova pasta\GH_XcelCanvas\GH_XcelCanvas\obj\Debug\net7.0-windows\ref\GH_XcelCanvas.gha
