@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\arqio\\Downloads\\Nova pasta\\GH_XcelCanvas\\GH_XcelCanvas\\GH_XcelCanvas.csproj": {}
+    "C:\\Users\\arqio\\Downloads\\GH_XcelCanvas\\GH_XcelCanvas\\GH_XcelCanvas.csproj": {}
   },
   "projects": {
-    "C:\\Users\\arqio\\Downloads\\Nova pasta\\GH_XcelCanvas\\GH_XcelCanvas\\GH_XcelCanvas.csproj": {
+    "C:\\Users\\arqio\\Downloads\\GH_XcelCanvas\\GH_XcelCanvas\\GH_XcelCanvas.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\arqio\\Downloads\\Nova pasta\\GH_XcelCanvas\\GH_XcelCanvas\\GH_XcelCanvas.csproj",
+        "projectUniqueName": "C:\\Users\\arqio\\Downloads\\GH_XcelCanvas\\GH_XcelCanvas\\GH_XcelCanvas.csproj",
         "projectName": "GH_XcelCanvas",
-        "projectPath": "C:\\Users\\arqio\\Downloads\\Nova pasta\\GH_XcelCanvas\\GH_XcelCanvas\\GH_XcelCanvas.csproj",
+        "projectPath": "C:\\Users\\arqio\\Downloads\\GH_XcelCanvas\\GH_XcelCanvas\\GH_XcelCanvas.csproj",
         "packagesPath": "C:\\Users\\arqio\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\arqio\\Downloads\\Nova pasta\\GH_XcelCanvas\\GH_XcelCanvas\\obj\\",
+        "outputPath": "C:\\Users\\arqio\\Downloads\\GH_XcelCanvas\\GH_XcelCanvas\\obj\\",
         "projectStyle": "PackageReference",
         "crossTargeting": true,
         "fallbackFolders": [

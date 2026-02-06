@@ -1,141 +1,164 @@
 using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using Grasshopper;
 using Grasshopper.Kernel;
 using Rhino.Geometry;
+
+// Referência ao Excel
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace GH_XcelCanvas
 {
     public class XcelReader : GH_Component
     {
-        /// <summary>
-        /// Construtor: Define o nome, apelido e descrição do componente.
-        /// </summary>
+        // --- ESTRUTURA DE DADOS INTELIGENTE ---
+        public struct CellData
+        {
+            public string Value;    // O resultado (ex: "10")
+            public string Formula;  // A lógica (ex: "=A1+B1")
+            public string Address;  // Endereço (ex: "C1")
+        }
+
+        // Trocamos a matriz simples de string pela nossa struct
+        public CellData[,] CachedData = null;
+
+        public int RowCount = 0;
+        public int ColCount = 0;
+        // ----------------------------------------------------
+
         public XcelReader()
           : base("Xcel Reader", "XRead",
-              "Lê um arquivo Excel e mostra os dados no Canvas.",
+              "Visualizador de Excel com suporte a Fórmulas e Valores.",
               "ScaleThinker", "Excel")
         {
         }
 
-        /// <summary>
-        /// Define os Inputs do componente.
-        /// </summary>
+        public override void CreateAttributes()
+        {
+            m_attributes = new XcelAttributes(this);
+        }
+
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            // Índice 0: Caminho do arquivo
-            pManager.AddTextParameter("File Path", "Path", "Localização do arquivo .xlsx", GH_ParamAccess.item);
-            // Índice 1: Botão de leitura
-            pManager.AddBooleanParameter("Read", "Read", "Defina como True para ler o arquivo", GH_ParamAccess.item, false);
+            pManager.AddTextParameter("File Path", "Path", "Arquivo .xlsx", GH_ParamAccess.item);
+            pManager.AddBooleanParameter("Read", "Read", "Ler arquivo", GH_ParamAccess.item, false);
+            // Futuramente adicionaremos aqui a seleção de Aba (Sheet)
         }
 
-        /// <summary>
-        /// Define os Output do componente.
-        /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            // Índice 0: Os dados lidos
-            pManager.AddTextParameter("Data", "Data", "Dados lidos do Excel", GH_ParamAccess.list);
-            // Índice 1: Mensagens de status (para debug)
-            pManager.AddTextParameter("Status", "Msg", "Status da operação", GH_ParamAccess.item);
+            // SAÍDA 0: Valores Resultantes
+            pManager.AddTextParameter("Values", "Val", "Valores resultantes das células", GH_ParamAccess.list);
+            // SAÍDA 1: Fórmulas
+            pManager.AddTextParameter("Formulas", "Fm", "Fórmulas originais das células", GH_ParamAccess.list);
+            // SAÍDA 2: Status
+            pManager.AddTextParameter("Status", "Msg", "Status", GH_ParamAccess.item);
         }
 
-        /// <summary>
-        /// O CEREBRO
-        /// </summary>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            // 1. Variáveis para receber os inputs
             string filePath = "";
             bool read = false;
 
-            // 2. Coletando os dados do usuário
-            if (!DA.GetData(0, ref filePath)) return; // Se não tiver caminho, para aqui.
-            if (!DA.GetData(1, ref read)) return;     // Se não tiver booleano, para aqui.
+            if (!DA.GetData(0, ref filePath)) return;
+            if (!DA.GetData(1, ref read)) return;
 
-            // Se o botão for False, a gente avisa e para (economiza processamento)
             if (!read)
             {
-                DA.SetData(1, "Aguardando sinal de leitura (True)...");
+                DA.SetData(2, "Aguardando leitura...");
                 return;
             }
 
-            // 3. Preparando as variáveis do Excel
             Excel.Application xlApp = null;
             Excel.Workbook xlWorkBook = null;
             Excel.Worksheet xlWorkSheet = null;
 
-            List<string> readData = new List<string>();
+            // Listas para as saídas do Grasshopper
+            List<string> outValues = new List<string>();
+            List<string> outFormulas = new List<string>();
 
             try
             {
-                // Inicia o Excel em "segundo plano" (invisível)
                 xlApp = new Excel.Application();
                 xlApp.Visible = false;
 
-                // Abre o arquivo
                 xlWorkBook = xlApp.Workbooks.Open(filePath);
-                // Pega a primeira aba (Planilha1)
-                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
-                // --- LEITURA DE TESTE (Células A1 a A5) ---
-                // Depois vamos mudar isso para ler o que o usuário quiser
-                for (int i = 1; i <= 5; i++)
+                // POR ENQUANTO: Pega a aba ativa (ActiveSheet) para evitar erros de índice
+                // Isso resolve parcialmente a questão de referenciar outras abas
+                xlWorkSheet = (Excel.Worksheet)xlWorkBook.ActiveSheet;
+
+                // Define área de leitura (ex: 10x5). Depois faremos dinâmico.
+                int numRows = 15;
+                int numCols = 5;
+
+                CachedData = new CellData[numRows, numCols];
+                RowCount = numRows;
+                ColCount = numCols;
+
+                // Loop de Leitura Otimizado
+                for (int i = 1; i <= numRows; i++)
                 {
-                    // No Excel, [linha, coluna]. Coluna 1 = A.
-                    var cell = (xlWorkSheet.Cells[i, 1] as Excel.Range);
+                    for (int j = 1; j <= numCols; j++)
+                    {
+                        var cell = (xlWorkSheet.Cells[i, j] as Excel.Range);
 
-                    if (cell.Value != null)
-                        readData.Add(cell.Value.ToString());
-                    else
-                        readData.Add("<Vazio>");
+                        string val = "";
+                        string form = "";
+                        string addr = cell.Address[false, false]; // Pega endereço tipo "A1"
+
+                        // Tenta ler o Valor
+                        if (cell.Value2 != null) val = cell.Value2.ToString();
+
+                        // Tenta ler a Fórmula (Se não tiver fórmula, o Excel retorna o valor mesmo)
+                        if (cell.Formula != null) form = cell.Formula.ToString();
+
+                        // Preenche nossa memória para o desenho
+                        CachedData[i - 1, j - 1] = new CellData
+                        {
+                            Value = val,
+                            Formula = form,
+                            Address = addr
+                        };
+
+                        // Preenche as listas de saída
+                        outValues.Add(val);
+                        outFormulas.Add(form);
+                    }
                 }
 
-                // 4. Entregando o resultado para o Grasshopper
-                DA.SetDataList(0, readData);
-                DA.SetData(1, "Sucesso! Arquivo lido.");
+                DA.SetDataList(0, outValues);
+                DA.SetDataList(1, outFormulas);
+                DA.SetData(2, "Leitura Concluída: " + xlWorkSheet.Name);
             }
             catch (Exception ex)
             {
-                // Se der erro (ex: arquivo não existe), avisa o usuário
-                DA.SetData(1, "Erro: " + ex.Message);
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Error, ex.Message);
+                DA.SetData(2, "Erro: " + ex.Message);
             }
             finally
             {
-                // 5. LIMPEZA DE MEMÓRIA (Muito Importante!)
-                // Fecha o Excel para não ficar travando o PC
+                // Limpeza completa
                 if (xlWorkBook != null)
                 {
-                    xlWorkBook.Close(false); // Fecha sem salvar
+                    xlWorkBook.Close(false);
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(xlWorkBook);
                 }
                 if (xlApp != null)
                 {
-                    xlApp.Quit(); // Mata o processo do Excel
+                    xlApp.Quit();
                     System.Runtime.InteropServices.Marshal.ReleaseComObject(xlApp);
                 }
 
-                // Zera as variáveis
                 xlWorkSheet = null;
                 xlWorkBook = null;
                 xlApp = null;
-
-                // Força o Windows a limpar a memória RAM agora
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
             }
         }
 
-        /// <summary>
-        /// Ícone do componente. Por enquanto nulo.
-        /// </summary>
         protected override System.Drawing.Bitmap Icon => null;
-
-        /// <summary>
-        /// ID unica
-        /// </summary>
         public override Guid ComponentGuid => new Guid("21b69fd1-db72-47f3-8e0f-1dd083240e2a");
     }
 }

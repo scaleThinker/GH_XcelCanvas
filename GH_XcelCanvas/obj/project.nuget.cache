@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "gSeKbPmV1Mg=",
+  "dgSpecHash": "EKzsmMZ/aPU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\arqio\\Downloads\\Nova pasta\\GH_XcelCanvas\\GH_XcelCanvas\\GH_XcelCanvas.csproj",
+  "projectFilePath": "C:\\Users\\arqio\\Downloads\\GH_XcelCanvas\\GH_XcelCanvas\\GH_XcelCanvas.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\arqio\\.nuget\\packages\\grasshopper\\8.0.23304.9001\\grasshopper.8.0.23304.9001.nupkg.sha512",
     "C:\\Users\\arqio\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
